@@ -2,7 +2,7 @@ import { Bell, Upload } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-
+import UserMenu from "./UserMenu";
 function Navbar() {
   const { isAuthenticated, user } = useSelector((state) => state.auth);
 
@@ -30,11 +30,7 @@ function Navbar() {
         </Button>
 
         {isAuthenticated ? (
-          <img
-            src={user.avatar}
-            alt={user.username}
-            className="h-10 w-10 rounded-full border border-slate-700 object-cover"
-          />
+          <UserMenu />
         ) : (
           <Link to="/login">
             <Button>Login</Button>
