@@ -1,19 +1,40 @@
-import { useSelector } from "react-redux";
+import { useEffect, useState } from "react";
+import { getAllVideos } from "../services/video.services";
+import VideoCard from "../components/video/VideoCard";
 
 function Home() {
-  const { user, isAuthenticated } = useSelector((state) => state.auth);
+  const [videos, setVideos] = useState([]);
+
+  useEffect(() => {
+    const fetchVideos = async () => {
+      try {
+        const response = await getAllVideos();
+        setVideos(response.videos || []);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    fetchVideos();
+  }, []);
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center gap-4">
-      <h1 className="text-3xl font-bold">Home</h1>
+    <>
+      <h1 className="mb-6 text-3xl font-bold">
+        Home Feed
+      </h1>
 
-      <h2>
-        Authenticated:
-        {isAuthenticated ? " Yes" : " No"}
-      </h2>
+      <div className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
 
-      <pre>{JSON.stringify(user, null, 2)}</pre>
-    </div>
+        {videos.map((video) => (
+          <VideoCard
+            key={video._id}
+            video={video}
+          />
+        ))}
+
+      </div>
+    </>
   );
 }
 

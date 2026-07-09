@@ -6,11 +6,29 @@ import Watch from "../pages/Watch";
 import Dashboard from "../pages/Dashboard";
 import Upload from "../pages/Upload";
 import NotFound from "../pages/NotFound";
+import MainLayout from "../layouts/MainLayout";
 
 const router = createBrowserRouter([
   {
-    path: "/",
-    element: <Home />,
+    element: <MainLayout />,
+    children: [
+      {
+        path: "/",
+        element: <Home />,
+      },
+      {
+        path: "/watch/:videoId",
+        element: <Watch />,
+      },
+      {
+        path: "/dashboard",
+        element: <Dashboard />,
+      },
+      {
+        path: "/upload",
+        element: <Upload />,
+      },
+    ],
   },
   {
     path: "/login",
@@ -21,21 +39,9 @@ const router = createBrowserRouter([
     element: <Register />,
   },
   {
-    path: "/watch/:videoId",
-    element: <Watch />,
-  },
-  {
-    path: "/dashboard",
-    element: <Dashboard />,
-  },
-  {
-    path: "/upload",
-    element: <Upload />,
-  },
-  {
     path: "*",
     element: <NotFound />,
-  }
+  },
 ]);
 
 function AppRouter() {
