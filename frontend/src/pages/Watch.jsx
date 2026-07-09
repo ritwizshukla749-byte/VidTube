@@ -3,7 +3,10 @@ import { useParams } from "react-router-dom";
 
 import VideoPlayer from "../components/video/VideoPlayer.jsx";
 import { getVideoById } from "../services/video.services.js";
-
+import VideoMeta from "../components/video/VideoMeta.jsx";
+import ChannelInfo from "../components/video/ChannelInfo.jsx";
+import VideoActions from "../components/video/VideoActions.jsx";
+import SuggestedVideos from "../components/video/SuggestedVideos";
 function Watch() {
   const { videoId } = useParams();
 
@@ -27,22 +30,17 @@ function Watch() {
   }
 
   return (
-    <div className="mx-auto max-w-7xl">
-      <VideoPlayer video={video} />
+    <div className="mx-auto grid max-w-7xl gap-8 lg:grid-cols-3">
+      <div className="lg:col-span-2">
+        <VideoPlayer video={video} />
 
-      <h1 className="mt-5 text-3xl font-bold">{video.title}</h1>
+        <VideoMeta video={video} />
 
-      <div className="mt-4 flex items-center gap-3">
-        <img src={video.owner.avatar} className="h-12 w-12 rounded-full" />
-
-        <div>
-          <h2>{video.owner.fullName}</h2>
-
-          <p className="text-sm text-slate-400">{video.views} views</p>
-        </div>
+        <VideoActions videoId={video._id} />
+        <ChannelInfo owner={video.owner} />
       </div>
 
-      <p className="mt-6 text-slate-300">{video.description}</p>
+      <SuggestedVideos currentVideoId={video._id} />
     </div>
   );
 }
