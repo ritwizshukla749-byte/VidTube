@@ -15,9 +15,41 @@ const getVideoComments = asyncHandler(async (req, res) => {
   }
 
   const aggregate = Comment.aggregate([
-    { $match: { video: new mongoose.Types.ObjectId(videoId) } },
     {
-      $sort: { createdAt: -1 }, // Sort by creation date, newest first
+      $match: {
+        video: new mongoose.Types.ObjectId(videoId),
+      },
+    },
+
+    {
+      $lookup: {
+        from: "users",
+        localField: "owner",
+        foreignField: "_id",
+        as: "owner",
+      },
+    },
+
+    {
+      $unwind: "$owner",
+    },
+
+    {
+      $project: {
+        content: 1,
+        createdAt: 1,
+
+        "owner._id": 1,
+        "owner.fullName": 1,
+        "owner.username": 1,
+        "owner.avatar": 1,
+      },
+    },
+
+    {
+      $sort: {
+        createdAt: -1,
+      },
     },
   ]);
 

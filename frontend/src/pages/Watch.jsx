@@ -7,6 +7,8 @@ import VideoMeta from "../components/video/VideoMeta.jsx";
 import ChannelInfo from "../components/video/ChannelInfo.jsx";
 import VideoActions from "../components/video/VideoActions.jsx";
 import SuggestedVideos from "../components/video/SuggestedVideos";
+import CommentSection from "../components/comment/CommentSection.jsx";
+
 function Watch() {
   const { videoId } = useParams();
 
@@ -38,6 +40,7 @@ function Watch() {
 
         <VideoActions videoId={video._id} />
         <ChannelInfo owner={video.owner} />
+        <CommentSection videoId={video._id} />
       </div>
 
       <SuggestedVideos currentVideoId={video._id} />
