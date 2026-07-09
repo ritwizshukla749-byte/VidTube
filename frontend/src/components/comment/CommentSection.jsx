@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { getVideoComments } from "../../services/comment.services.js";
+import CommentCard from "./CommentCard.jsx";
 
 function CommentSection({ videoId }) {
   const [comments, setComments] = useState([]);
@@ -23,17 +24,7 @@ function CommentSection({ videoId }) {
       <h2 className="mb-5 text-2xl font-bold">Comments ({comments.length})</h2>
 
       {comments.map((comment) => (
-        <div key={comment._id} className="mb-4 rounded-xl bg-slate-900 p-4">
-          <p className="text-slate-200">{comment.content}</p>
-
-          <p className="mt-2 text-xs text-slate-500">
-            {new Date(comment.createdAt).toLocaleDateString("en-IN", {
-              day: "numeric",
-              month: "short",
-              year: "numeric",
-            })}
-          </p>
-        </div>
+        <CommentCard key={comment._id} comment={comment} />
       ))}
     </div>
   );
