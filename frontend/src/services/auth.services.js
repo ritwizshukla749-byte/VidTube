@@ -14,3 +14,13 @@ export const logoutUser = async () => {
   const response = await api.post("/users/logout");
   return response.data;
 };
+
+export const registerUser = async (formData) => {
+  const response = await api.post("/users/register", formData, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
+
+  return response.data;
+};
