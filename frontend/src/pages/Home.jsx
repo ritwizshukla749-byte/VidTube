@@ -1,22 +1,26 @@
 import { useEffect, useState } from "react";
 import { getAllVideos } from "../services/video.services";
 import VideoCard from "../components/video/VideoCard";
-
+import { useSelector } from "react-redux";
 function Home() {
   const [videos, setVideos] = useState([]);
-
+  const { query } = useSelector((state) => state.search);
+  console.log("Search Query:", query);
   useEffect(() => {
-    const fetchVideos = async () => {
+    const timer = setTimeout(async () => {
       try {
-        const response = await getAllVideos();
-        setVideos(response.videos || []);
-      } catch (error) {
-        console.error(error);
-      }
-    };
+        const response = await getAllVideos({
+          query,
+        });
 
-    fetchVideos();
-  }, []);
+        setVideos(response.videos);
+      } catch (err) {
+        console.error(err);
+      }
+    }, 300);
+
+    return () => clearTimeout(timer);
+  }, [query]);
 
   return (
     <>

@@ -1,10 +1,13 @@
 import { Bell, Upload } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { setQuery } from "@/store/searchSlice";
 import { Link } from "react-router-dom";
 import UserMenu from "./UserMenu";
+
 function Navbar() {
   const { isAuthenticated, user } = useSelector((state) => state.auth);
+  const dispatch = useDispatch();
 
   return (
     <header className="sticky top-0 z-50 flex h-16 items-center justify-between border-b border-slate-800 bg-slate-950 px-6">
@@ -16,6 +19,7 @@ function Navbar() {
         <input
           type="text"
           placeholder="Search videos..."
+          onChange={(e) => dispatch(setQuery(e.target.value))}
           className="w-full rounded-full border border-slate-700 bg-slate-900 px-4 py-2 text-white outline-none"
         />
       </div>
