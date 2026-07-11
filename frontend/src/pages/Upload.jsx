@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { publishVideo } from "../services/video.services";
 import toast from "react-hot-toast";
@@ -10,8 +11,12 @@ function Upload() {
     formState: { errors },
   } = useForm();
   const navigate = useNavigate();
+  const [videoName, setVideoName] = useState("");
+  const [thumbnailName, setThumbnailName] = useState("");
+  const [isUploading, setIsUploading] = useState(false);
   const onSubmit = async (data) => {
     try {
+      setIsUploading(true);
       const formData = new FormData();
 
       formData.append("title", data.title);
@@ -31,6 +36,8 @@ function Upload() {
       console.error(error);
 
       toast.error(error.response?.data?.message || "Upload failed");
+    } finally {
+      setIsUploading(false);
     }
   };
 
@@ -87,8 +94,10 @@ function Upload() {
 
           {/* Video */}
 
-          <div>
-            <label className="text-white">Video</label>
+          <div className="rounded-xl border-2 border-dashed border-slate-700 p-6">
+            <label className="mb-4 block text-lg font-semibold text-white">
+               Upload Video
+            </label>
 
             <input
               type="file"
@@ -96,14 +105,29 @@ function Upload() {
               className="w-full text-white"
               {...register("video", {
                 required: "Video is required",
+                onChange: (e) => {
+                  setVideoName(e.target.files?.[0]?.name || "");
+                },
               })}
             />
+
+            <p className="mt-3 text-sm text-slate-400">
+              MP4, MOV, AVI supported
+            </p>
+
+            {videoName && (
+              <p className="mt-4 rounded-lg bg-green-900/30 p-3 text-green-400">
+                ✅ {videoName}
+              </p>
+            )}
           </div>
 
           {/* Thumbnail */}
 
-          <div>
-            <label className="text-white">Thumbnail</label>
+          <div className="rounded-xl border-2 border-dashed border-slate-700 p-6">
+            <label className="mb-4 block text-lg font-semibold text-white">
+               Thumbnail
+            </label>
 
             <input
               type="file"
@@ -111,11 +135,17 @@ function Upload() {
               className="w-full text-white"
               {...register("thumbnail", {
                 required: "Thumbnail is required",
+                onChange: (e) => {
+                  setThumbnailName(e.target.files?.[0]?.name || "");
+                },
               })}
             />
-            {errors.thumbnail && (
-              <p className="mt-1 text-sm text-red-500">
-                {errors.thumbnail.message}
+
+            <p className="mt-3 text-sm text-slate-400">JPG, PNG, WEBP</p>
+
+            {thumbnailName && (
+              <p className="mt-4 rounded-lg bg-green-900/30 p-3 text-green-400">
+                ✅ {thumbnailName}
               </p>
             )}
           </div>
@@ -132,8 +162,12 @@ function Upload() {
             <label className="text-white">Publish immediately</label>
           </div>
 
-          <button className="w-full rounded-lg bg-red-600 py-3 font-semibold text-white hover:bg-red-500">
-            Upload
+          <button
+            type="submit"
+            disabled={isUploading}
+            className="w-full rounded-lg bg-red-600 py-3 font-semibold text-white transition hover:bg-red-500 disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            {isUploading ? "Uploading..." : "Upload"}
           </button>
         </form>
       </div>

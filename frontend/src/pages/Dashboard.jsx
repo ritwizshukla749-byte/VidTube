@@ -1,14 +1,20 @@
 import { useEffect, useState } from "react";
-
+import EditVideoDialog from "../components/dashboard/EditVideoDialog";
+import DashboardStats from "../components/dashboard/DashboardStats";
+import { togglePublishStatus, deleteVideo } from "../services/video.services";
+import toast from "react-hot-toast";
 import {
   getChannelStats,
   getChannelVideos,
 } from "../services/dashboard.services";
+import { Button } from "@/components/ui/button";
+import DashboardTable from "../components/dashboard/DashboardTable";
 
 function Dashboard() {
   const [stats, setStats] = useState(null);
   const [videos, setVideos] = useState([]);
-
+  const [editOpen, setEditOpen] = useState(false);
+  const [selectedVideo, setSelectedVideo] = useState(null);
   useEffect(() => {
     const fetchDashboard = async () => {
       try {
@@ -24,79 +30,86 @@ function Dashboard() {
 
     fetchDashboard();
   }, []);
+  const handleTogglePublish = async (videoId) => {
+    try {
+      const updatedVideo = await togglePublishStatus(videoId);
 
+      setVideos((prevVideos) =>
+        prevVideos.map((video) =>
+          video._id === updatedVideo._id ? updatedVideo : video,
+        ),
+      );
+
+      toast.success("Publish status updated");
+    } catch (error) {
+      console.error(error);
+
+      toast.error(
+        error.response?.data?.message || "Failed to update publish status",
+      );
+    }
+  };
+  const handleDeleteVideo = async (videoId) => {
+    const confirmed = window.confirm(
+      "Are you sure you want to delete this video?",
+    );
+
+    if (!confirmed) return;
+
+    try {
+      await deleteVideo(videoId);
+
+      setVideos((prevVideos) =>
+        prevVideos.filter((video) => video._id !== videoId),
+      );
+
+      setStats((prevStats) => ({
+        ...prevStats,
+        totalVideos: prevStats.totalVideos - 1,
+      }));
+
+      toast.success("Video deleted successfully");
+    } catch (error) {
+      console.error(error);
+
+      toast.error(error.response?.data?.message || "Failed to delete video");
+    }
+  };
+  const handleEdit = (video) => {
+    setSelectedVideo(video);
+    setEditOpen(true);
+  };
   if (!stats) {
     return <h1>Loading...</h1>;
   }
 
+  const handleVideoUpdated = (updatedVideo) => {
+    setVideos((prevVideos) =>
+      prevVideos.map((video) =>
+        video._id === updatedVideo._id ? updatedVideo : video,
+      ),
+    );
+
+    setEditOpen(false);
+
+    setSelectedVideo(null);
+  };
   return (
     <>
       <h1 className="mb-8 text-3xl font-bold">Dashboard</h1>
-      <div className="mb-10 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
-        <div className="rounded-xl bg-slate-900 p-6">
-          <h2 className="text-slate-400">Videos</h2>
-          <p className="mt-2 text-4xl font-bold text-white">
-            {stats.totalVideos}
-          </p>
-        </div>
-
-        <div className="rounded-xl bg-slate-900 p-6">
-          <h2 className="text-slate-400">Views</h2>
-          <p className="mt-2 text-4xl font-bold text-white">
-            {stats.totalViews}
-          </p>
-        </div>
-
-        <div className="rounded-xl bg-slate-900 p-6">
-          <h2 className="text-slate-400">Subscribers</h2>
-          <p className="mt-2 text-4xl font-bold text-white">
-            {stats.totalSubscribers}
-          </p>
-        </div>
-
-        <div className="rounded-xl bg-slate-900 p-6">
-          <h2 className="text-slate-400">Likes</h2>
-          <p className="mt-2 text-4xl font-bold text-white">
-            {stats.totalLikes}
-          </p>
-        </div>
-      </div>
-      <div className="overflow-hidden rounded-xl bg-slate-900">
-        <table className="w-full">
-          <thead className="bg-slate-800">
-            <tr>
-              <th className="p-4 text-left">Thumbnail</th>
-
-              <th className="p-4 text-left">Title</th>
-
-              <th className="p-4 text-left">Views</th>
-
-              <th className="p-4 text-left">Status</th>
-            </tr>
-          </thead>
-
-          <tbody>
-            {videos.map((video) => (
-              <tr key={video._id} className="border-t border-slate-800">
-                <td className="p-4">
-                  <img
-                    src={video.thumbnail}
-                    className="h-16 w-28 rounded-lg object-cover"
-                  />
-                </td>
-
-                <td className="p-4">{video.title}</td>
-
-                <td className="p-4">{video.views}</td>
-
-                <td className="p-4">
-                  {video.isPublished ? "Public" : "Private"}
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+      <DashboardStats stats={stats} />
+      <DashboardTable
+        videos={videos}
+        onTogglePublish={handleTogglePublish}
+        onDelete={handleDeleteVideo}
+        onEdit={handleEdit}
+      />
+      <EditVideoDialog
+        open={editOpen}
+        onOpenChange={setEditOpen}
+        video={selectedVideo}
+        onVideoUpdated={handleVideoUpdated}
+      />
     </>
   );
 }
