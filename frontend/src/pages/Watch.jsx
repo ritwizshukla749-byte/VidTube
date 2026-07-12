@@ -27,9 +27,30 @@ function Watch() {
     fetchVideo();
   }, [videoId]);
 
-  if (!video) {
-    return <h1>Loading...</h1>;
-  }
+ if (!video) {
+   return (
+     <div className="mx-auto max-w-7xl animate-pulse">
+       <div className="aspect-video rounded-xl bg-slate-800" />
+
+       <div className="mt-6 h-10 w-2/3 rounded bg-slate-800" />
+
+       <div className="mt-6 flex items-center gap-4">
+         <div className="h-12 w-12 rounded-full bg-slate-800" />
+
+         <div className="space-y-2">
+           <div className="h-4 w-40 rounded bg-slate-800" />
+           <div className="h-4 w-24 rounded bg-slate-800" />
+         </div>
+       </div>
+
+       <div className="mt-6 space-y-3">
+         <div className="h-4 rounded bg-slate-800" />
+         <div className="h-4 rounded bg-slate-800" />
+         <div className="h-4 w-3/4 rounded bg-slate-800" />
+       </div>
+     </div>
+   );
+ }
 
   return (
     <div className="mx-auto grid max-w-7xl gap-8 lg:grid-cols-3">

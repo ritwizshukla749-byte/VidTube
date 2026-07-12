@@ -1,4 +1,5 @@
 import { useForm } from "react-hook-form";
+import { useState } from "react";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import { registerUser } from "../services/auth.services";
@@ -10,9 +11,12 @@ function Register() {
   } = useForm();
 
   const navigate = useNavigate();
-
+  const [avatarName, setAvatarName] = useState("");
+  const [coverName, setCoverName] = useState("");
+  const [isRegistering, setIsRegistering] = useState(false);
   const onSubmit = async (data) => {
     try {
+      setIsRegistering(true);
       const formData = new FormData();
 
       formData.append("fullName", data.fullName);
@@ -35,6 +39,8 @@ function Register() {
       console.error(error);
 
       toast.error(error.response?.data?.message || "Registration failed");
+    } finally {
+      setIsRegistering(false);
     }
   };
 
@@ -117,11 +123,17 @@ function Register() {
             <input
               type="file"
               accept="image/*"
-              className="w-full text-white"
               {...register("avatar", {
                 required: "Avatar is required",
+                onChange: (e) => setAvatarName(e.target.files?.[0]?.name || ""),
               })}
             />
+
+            {avatarName && (
+              <p className="mt-2 text-sm text-green-400">
+                Selected: {avatarName}
+              </p>
+            )}
 
             {errors.avatar && (
               <p className="text-red-500 text-sm mt-1">
@@ -135,13 +147,24 @@ function Register() {
             <input
               type="file"
               accept="image/*"
-              className="w-full text-white"
-              {...register("coverImage")}
+              {...register("coverImage", {
+                onChange: (e) => setCoverName(e.target.files?.[0]?.name || ""),
+              })}
             />
+
+            {coverName && (
+              <p className="mt-2 text-sm text-green-400">
+                Selected: {coverName}
+              </p>
+            )}
           </div>
 
-          <button className="w-full rounded-lg bg-green-500 py-3 text-black font-semibold hover:bg-green-400">
-            Register
+          <button
+            type="submit"
+            disabled={isRegistering}
+            className="w-full rounded-lg bg-green-500 py-3 font-semibold text-black disabled:opacity-50"
+          >
+            {isRegistering ? "Creating account..." : "Register"}
           </button>
         </form>
       </div>

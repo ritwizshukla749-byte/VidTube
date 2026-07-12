@@ -24,19 +24,18 @@ function Home() {
 
   return (
     <>
-      <h1 className="mb-6 text-3xl font-bold">
-        Home Feed
-      </h1>
+      <h1 className="mb-8 text-3xl font-bold">Discover Videos</h1>
 
-      <div className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
+      <div className="grid grid-cols-1 gap-8 md:grid-cols-2 xl:grid-cols-3">
+        {videos.length === 0 ? (
+          <div className="col-span-full flex flex-col items-center justify-center rounded-xl border border-dashed border-slate-700 py-20">
+            <h2 className="text-2xl font-semibold">No videos found</h2>
 
-        {videos.map((video) => (
-          <VideoCard
-            key={video._id}
-            video={video}
-          />
-        ))}
-
+            <p className="mt-2 text-slate-400">Try another search keyword.</p>
+          </div>
+        ) : (
+          videos.map((video) => <VideoCard key={video._id} video={video} />)
+        )}
       </div>
     </>
   );

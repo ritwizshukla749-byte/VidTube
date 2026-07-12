@@ -1,5 +1,6 @@
+import ErrorPage from "../pages/ErrorPage.jsx";
 function NotFound() {
-    return <h1>NotFound</h1>
+    return <ErrorPage />;
 }
 
 export default NotFound;

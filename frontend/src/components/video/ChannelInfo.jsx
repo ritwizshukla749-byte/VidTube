@@ -1,24 +1,32 @@
 import { Button } from "../ui/button.jsx";
+import { Card } from "../ui/card.jsx";
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar.jsx";
+import { Badge } from "../ui/badge.jsx";
+
 
 function ChannelInfo({ owner }) {
   return (
-    <div className="mt-6 flex items-center justify-between">
-      <div className="flex items-center gap-4">
-        <img
-          src={owner.avatar}
-          alt={owner.username}
-          className="h-12 w-12 rounded-full"
-        />
+    <Card className="mt-6">
+      <div className="flex items-center justify-between p-5">
+        <div className="flex items-center gap-4">
+          <Avatar className="h-14 w-14">
+            <AvatarImage src={owner.avatar} alt={owner.username} />
 
-        <div>
-          <h2 className="font-semibold">{owner.fullName}</h2>
+            <AvatarFallback>{owner.fullName[0]}</AvatarFallback>
+          </Avatar>
 
-          <p className="text-sm text-slate-400">@{owner.username}</p>
+          <div>
+            <h2 className="text-lg font-semibold">{owner.fullName}</h2>
+
+            <p className="text-sm text-muted-foreground">@{owner.username}</p>
+
+            <Badge variant="secondary" className="mt-2">
+              Creator
+            </Badge>
+          </div>
         </div>
       </div>
-
-      <Button className="bg-red-600 hover:bg-red-700">Subscribe</Button>
-    </div>
+    </Card>
   );
 }
 

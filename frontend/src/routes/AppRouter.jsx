@@ -11,6 +11,7 @@ import MainLayout from "../layouts/MainLayout";
 const router = createBrowserRouter([
   {
     element: <MainLayout />,
+    errorElement: <NotFound />,
     children: [
       {
         path: "/",
