@@ -6,7 +6,7 @@ import { Link } from "react-router-dom";
 import UserMenu from "./UserMenu";
 
 function Navbar() {
-  const { isAuthenticated, user } = useSelector((state) => state.auth);
+  const { isAuthenticated} = useSelector((state) => state.auth);
   const dispatch = useDispatch();
 
   return (

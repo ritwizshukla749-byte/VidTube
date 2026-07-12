@@ -7,7 +7,6 @@ import {
   getChannelStats,
   getChannelVideos,
 } from "../services/dashboard.services";
-import { Button } from "@/components/ui/button";
 import DashboardTable from "../components/dashboard/DashboardTable";
 
 function Dashboard() {

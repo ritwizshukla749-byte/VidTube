@@ -16,8 +16,7 @@ function AuthInitializer({ children }) {
 
         dispatch(loginSuccess(response.data));
       } catch (error) {
-        //User is not logged in or token is invalid,
-        // handle the error if needed.
+        console.error(error);
       } finally {
         dispatch(setLoading(false));
       }

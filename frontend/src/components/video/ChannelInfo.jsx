@@ -1,4 +1,3 @@
-import { Button } from "../ui/button.jsx";
 import { Card } from "../ui/card.jsx";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar.jsx";
 import { Badge } from "../ui/badge.jsx";
