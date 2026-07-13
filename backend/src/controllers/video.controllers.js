@@ -154,14 +154,14 @@ const publishVideo = asyncHandler(async (req, res) => {
   try {
     videoUpload = await uploadOnCloudinary(videoLocalPath);
     
-    if (!videoUpload?.url) throw new Error("Video upload failed");
+    if (!videoUpload?.secure_url) throw new Error("Video upload failed");
   } catch (err) {
     throw new ApiError(500, "Failed to upload video");
   }
 
   try {
     thumbUpload = await uploadOnCloudinary(thumbnailLocalPath);
-    if (!thumbUpload?.url) throw new Error("Thumbnail upload failed");
+    if (!thumbUpload?.secure_url) throw new Error("Thumbnail upload failed");
   } catch (err) {
     if (videoUpload?.public_id)
       await deleteFromCloudinary(videoUpload.public_id, videoUpload.resource_type);
@@ -170,8 +170,8 @@ const publishVideo = asyncHandler(async (req, res) => {
 
   try {
     const created = await Video.create({
-      videofilename: videoUpload.url,
-      thumbnail: thumbUpload.url,
+      videofilename: videoUpload.secure_url,
+      thumbnail: thumbUpload.secure_url,
       title: title.trim(),
       description: description.trim(),
       duration: Number(videoUpload.duration) || 0,
@@ -293,11 +293,11 @@ const updateVideo = asyncHandler(async (req, res) => {
   if (thumbnailLocalPath) {
     try {
       uploadedThumbnail = await uploadOnCloudinary(thumbnailLocalPath);
-      if (!uploadedThumbnail?.url) {
+      if (!uploadedThumbnail?.secure_url) {
         throw new Error("Thumbnail upload failed");
       }
 
-      updatePayload.thumbnail = uploadedThumbnail.url;
+      updatePayload.thumbnail = uploadedThumbnail.secure_url;
       updatePayload.thumbnailPublicId = uploadedThumbnail.public_id;
       updatePayload.thumbnailResourceType = uploadedThumbnail.resource_type;
     } catch (error) {
