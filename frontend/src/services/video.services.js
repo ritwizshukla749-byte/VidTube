@@ -41,3 +41,13 @@ export const updateVideo = async (videoId, formData) => {
 
   return response.data.data;
 };
+
+export const getVideosByUser = async (userId) => {
+  const response = await api.get("/videos", {
+    params: {
+      userId,
+    },
+  });
+
+  return response.data.data.videos;
+};

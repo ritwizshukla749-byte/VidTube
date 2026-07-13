@@ -118,4 +118,19 @@ const getLikedVideos = asyncHandler(async (req, res) => {
     );
 });
 
-export { toggleCommentLike, toggleTweetLike, toggleVideoLike, getLikedVideos };
+const getLikeStatus = asyncHandler(async (req, res) => {
+  const { videoId } = req.params;
+
+  const liked = await Like.exists({
+    likedBy: req.user._id,
+    video: videoId,
+  });
+
+  return res.status(200).json(
+    new ApiResponse(200, "Like status fetched successfully", {
+      liked: !!liked,
+    })
+  );
+});
+
+export { toggleCommentLike, toggleTweetLike, toggleVideoLike, getLikedVideos, getLikeStatus };

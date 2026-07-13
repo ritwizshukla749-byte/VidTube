@@ -4,6 +4,7 @@ import {
   toggleTweetLike,
   toggleVideoLike,
   getLikedVideos,
+  getLikeStatus,
 } from "../controllers/like.controllers.js";
 import { verifyJWT } from "../middlewares/auth.middlewares.js";
 
@@ -16,6 +17,8 @@ router.post("/toggle/v/:videoId", toggleVideoLike);
 router.post("/toggle/c/:commentId", toggleCommentLike);
 
 router.post("/toggle/t/:tweetId", toggleTweetLike);
+
+router.get("/status/:videoId", getLikeStatus);
 
 router.get("/videos", getLikedVideos);
 

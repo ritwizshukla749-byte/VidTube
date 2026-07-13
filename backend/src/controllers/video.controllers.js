@@ -241,21 +241,34 @@ const getVideoById = asyncHandler(async (req, res) => {
     throw new ApiError(404, "Video not found");
   }
 
+  let updatedVideo;
+
+  // Increase views only for other users
   if (video.isPublished && !isOwner) {
-    const updatedVideo = await Video.findByIdAndUpdate(
+    updatedVideo = await Video.findByIdAndUpdate(
       video._id,
       { $inc: { views: 1 } },
       { new: true }
     ).populate("owner", "fullName username avatar");
+  } else {
+    updatedVideo = await Video.findById(video._id).populate(
+      "owner",
+      "fullName username avatar"
+    );
+  }
 
-    return res
-      .status(200)
-      .json(new ApiResponse(200, "Video fetched successfully", updatedVideo));
+  // Add to watch history for every logged-in user
+  if (req.user) {
+    await User.findByIdAndUpdate(req.user._id, {
+      $addToSet: {
+        watchHistory: video._id,
+      },
+    });
   }
 
   return res
     .status(200)
-    .json(new ApiResponse(200, "Video fetched successfully", video));
+    .json(new ApiResponse(200, "Video fetched successfully", updatedVideo));
 });
 
 const updateVideo = asyncHandler(async (req, res) => {

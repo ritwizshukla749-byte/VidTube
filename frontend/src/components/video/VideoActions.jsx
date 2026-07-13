@@ -1,19 +1,33 @@
 import { ThumbsUp, Share2, Bookmark } from "lucide-react";
 import { Button } from "../ui/button";
-import { toggleVideoLike } from "../../services/like.services.js";
-import {useState} from "react";
+import {
+  toggleVideoLike,
+  getLikeStatus,
+} from "../../services/like.services.js";
+import { useState, useEffect } from "react";
 
 function VideoActions({ videoId }) {
-    const [liked, setLiked] = useState(false);
-
-    const handleLike = async () => {
+  const [liked, setLiked] = useState(false);
+  useEffect(() => {
+    const fetchStatus = async () => {
       try {
-        await toggleVideoLike(videoId);
-        setLiked((prev) => !prev);
+        const response = await getLikeStatus(videoId);
+        setLiked(response.liked);
       } catch (err) {
         console.error(err);
       }
     };
+
+    fetchStatus();
+  }, [videoId]);
+  const handleLike = async () => {
+    try {
+      await toggleVideoLike(videoId);
+      setLiked((prev) => !prev);
+    } catch (err) {
+      console.error(err);
+    }
+  };
   return (
     <div className="mt-5 flex flex-wrap gap-3">
       <Button variant={liked ? "default" : "secondary"} onClick={handleLike}>

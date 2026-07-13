@@ -24,3 +24,13 @@ export const registerUser = async (formData) => {
 
   return response.data;
 };
+
+export const getChannelProfile = async (username) => {
+  const response = await api.get(`/users/c/${username}`);
+  return response.data;
+};
+
+export const getWatchHistory = async () => {
+  const response = await api.get("/users/watch-history");
+  return response.data;
+};

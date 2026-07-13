@@ -11,7 +11,7 @@ import {
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
-import { LogOut, LayoutDashboard, Heart } from "lucide-react";
+import { LogOut, LayoutDashboard, Heart, History } from "lucide-react";
 
 import { logout } from "@/store/authSlice";
 import { logoutUser } from "@/services/auth.services";
@@ -24,20 +24,20 @@ function UserMenu() {
   const navigate = useNavigate();
 
   const handleLogout = async () => {
-  try {
-    await logoutUser();
+    try {
+      await logoutUser();
 
-    dispatch(logout());
+      dispatch(logout());
 
-    toast.success("Logged out successfully");
+      toast.success("Logged out successfully");
 
-    navigate("/login");
-  } catch (error) {
-    console.error(error);
+      navigate("/login");
+    } catch (error) {
+      console.error(error);
 
-    toast.error("Failed to logout");
-  }
-};
+      toast.error("Failed to logout");
+    }
+  };
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -61,6 +61,11 @@ function UserMenu() {
           Dashboard
         </DropdownMenuItem>
 
+        <DropdownMenuItem onClick={() => navigate("/history")}>
+          <History className="mr-2 h-4 w-4" />
+          Watch History
+        </DropdownMenuItem>
+        
         <DropdownMenuItem onClick={() => navigate("/liked")}>
           <Heart className="mr-2 h-4 w-4" />
           Liked Videos

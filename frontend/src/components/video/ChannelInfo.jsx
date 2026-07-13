@@ -1,4 +1,5 @@
 import { useSelector } from "react-redux";
+import { Link } from "react-router-dom";
 import { Card } from "../ui/card.jsx";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar.jsx";
 import { Badge } from "../ui/badge.jsx";
@@ -82,15 +83,19 @@ function ChannelInfo({ owner }) {
             <AvatarFallback>{owner.fullName[0]}</AvatarFallback>
           </Avatar>
 
-          <div>
-            <h2 className="text-lg font-semibold">{owner.fullName}</h2>
+          <Link to={`/channel/${owner.username}`}>
+            <div className="cursor-pointer">
+              <h2 className="text-lg font-semibold hover:text-red-500 transition-colors">
+                {owner.fullName}
+              </h2>
 
-            <p className="text-sm text-muted-foreground">@{owner.username}</p>
+              <p className="text-sm text-muted-foreground">@{owner.username}</p>
 
-            <Badge variant="secondary" className="mt-2">
-              Creator
-            </Badge>
-          </div>
+              <Badge variant="secondary" className="mt-2">
+                Creator
+              </Badge>
+            </div>
+          </Link>
         </div>
       </div>
     </Card>
