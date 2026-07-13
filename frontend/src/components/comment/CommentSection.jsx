@@ -46,7 +46,7 @@ const handleDeleteComment = async (commentId) => {
       <CommentForm onSubmit={handleAddComment} />
 
       {comments.map((comment) => (
-        <CommentCard key={comment._id} comment={comment} onDelete={handleDeleteComment} />
+        <CommentCard key={comment._id} comment={comment} onDelete={handleDeleteComment} onRefresh={fetchComments} />
       ))}
     </div>
   );

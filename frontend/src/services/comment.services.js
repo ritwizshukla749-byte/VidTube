@@ -14,3 +14,11 @@ export const deleteComment = async (commentId) => {
   const response = await api.delete(`/comments/c/${commentId}`);
   return response.data;
 };
+
+export const updateComment = async (commentId, content) => {
+  const response = await api.patch(`/comments/c/${commentId}`, {
+    content,
+  });
+
+  return response.data;
+};
