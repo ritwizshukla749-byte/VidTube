@@ -1,8 +1,9 @@
 import { useForm } from "react-hook-form";
-import {loginUser} from '../services/auth.services.js'
-import toast from 'react-hot-toast';
-import {useDispatch } from 'react-redux';
-import {loginSuccess} from '../store/authSlice.js'
+import { useState } from "react";
+import { loginUser } from "../services/auth.services.js";
+import toast from "react-hot-toast";
+import { useDispatch } from "react-redux";
+import { loginSuccess } from "../store/authSlice.js";
 import { useNavigate } from "react-router-dom";
 
 function Login() {
@@ -12,23 +13,22 @@ function Login() {
     formState: { errors },
   } = useForm();
 
-const dispatch = useDispatch();
-const navigate = useNavigate();
-
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
   const onSubmit = async (data) => {
+    setLoading(true);
+
     try {
       const response = await loginUser(data);
 
       dispatch(loginSuccess(response.data.user));
-
       toast.success(response.message);
-      
       navigate("/");
-
     } catch (error) {
-      console.error(error);
-
       toast.error(error.response?.data?.message || "Something went wrong");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -74,8 +74,12 @@ const navigate = useNavigate();
             )}
           </div>
 
-          <button className="w-full rounded-lg bg-green-500 py-3 text-black font-semibold hover:bg-green-400">
-            Login
+          <button
+            type="submit"
+            disabled={loading}
+            className="w-full rounded-lg bg-green-500 py-3 text-black font-semibold hover:bg-green-400 disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            {loading ? "Logging in..." : "Login"}
           </button>
         </form>
       </div>
