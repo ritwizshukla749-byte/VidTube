@@ -7,7 +7,6 @@ function App() {
     const checkBackend = async () => {
       try {
         const response = await api.get("/healthcheck");
-        console.log(response.data);
       } catch (error) {
         console.error(error);
       }

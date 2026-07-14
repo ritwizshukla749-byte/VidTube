@@ -5,7 +5,6 @@ import { useSelector } from "react-redux";
 function Home() {
   const [videos, setVideos] = useState([]);
   const { query } = useSelector((state) => state.search);
-  console.log("Search Query:", query);
   useEffect(() => {
     const timer = setTimeout(async () => {
       try {

@@ -10,6 +10,12 @@ import MainLayout from "../layouts/MainLayout";
 import Channel from "../pages/Channel";
 import History from "../pages/History";
 import Liked from "../pages/Liked";
+import Playlists from "../pages/Playlists";
+import PlaylistDetails from "../pages/PlaylistDetails";
+
+
+
+
 const router = createBrowserRouter([
   {
     element: <MainLayout />,
@@ -17,6 +23,14 @@ const router = createBrowserRouter([
       {
         path: "/",
         element: <Home />,
+      },
+      {
+        path: "/playlists",
+        element: <Playlists />,
+      },
+      {
+        path: "/playlists/:playlistId",
+        element: <PlaylistDetails />,
       },
       {
         path: "/liked",

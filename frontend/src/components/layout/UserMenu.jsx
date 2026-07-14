@@ -65,6 +65,10 @@ function UserMenu() {
           <History className="mr-2 h-4 w-4" />
           Watch History
         </DropdownMenuItem>
+
+        <DropdownMenuItem onClick={() => navigate("/playlists")}>
+          Playlists
+        </DropdownMenuItem>
         
         <DropdownMenuItem onClick={() => navigate("/liked")}>
           <Heart className="mr-2 h-4 w-4" />

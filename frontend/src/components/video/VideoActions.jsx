@@ -5,9 +5,11 @@ import {
   getLikeStatus,
 } from "../../services/like.services.js";
 import { useState, useEffect } from "react";
+import AddToPlaylistDialog from "../playlist/AddToPlaylistDialog";
 
 function VideoActions({ videoId }) {
   const [liked, setLiked] = useState(false);
+  const [playlistDialogOpen, setPlaylistDialogOpen] = useState(false);
   useEffect(() => {
     const fetchStatus = async () => {
       try {
@@ -40,10 +42,15 @@ function VideoActions({ videoId }) {
         Share
       </Button>
 
-      <Button variant="secondary">
+      <Button variant="secondary" onClick={() => setPlaylistDialogOpen(true)}>
         <Bookmark className="mr-2 h-4 w-4" />
         Save
       </Button>
+      <AddToPlaylistDialog
+        open={playlistDialogOpen}
+        onOpenChange={setPlaylistDialogOpen}
+        videoId={videoId}
+      />
     </div>
   );
 }

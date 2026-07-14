@@ -335,7 +335,7 @@ const updateVideo = asyncHandler(async (req, res) => {
       try {
         await deleteFromCloudinary(oldThumbnailPublicId, oldThumbnailResourceType);
       } catch (err) {
-        console.log("Failed to delete old thumbnail from Cloudinary", err);
+        console.error("Failed to delete old thumbnail from Cloudinary", err);
       }
     }
 
@@ -364,7 +364,7 @@ const deleteVideo = asyncHandler(async (req, res) => {
       await deleteFromCloudinary(video.videoPublicId, video.videoResourceType);
     }
   } catch (err) {
-    console.log("Failed to delete video asset from Cloudinary", err);
+    console.error("Failed to delete video asset from Cloudinary", err);
   }
 
   try {
@@ -372,7 +372,7 @@ const deleteVideo = asyncHandler(async (req, res) => {
       await deleteFromCloudinary(video.thumbnailPublicId, video.thumbnailResourceType);
     }
   } catch (err) {
-    console.log("Failed to delete thumbnail from Cloudinary", err);
+    console.error("Failed to delete thumbnail from Cloudinary", err);
   }
 
   await Video.findByIdAndDelete(video._id);

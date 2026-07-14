@@ -71,7 +71,6 @@ const registerUser = asyncHandler(async (req, res) => {
   try {
     avatar = await uploadOnCloudinary(avatarLocalPath);
   } catch (error) {
-    console.log("Error uploading avatar", error);
     throw new ApiError(500, "Failed to upload avatar");
   }
 
