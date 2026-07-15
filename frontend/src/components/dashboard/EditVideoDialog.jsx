@@ -5,12 +5,13 @@ import {
   DialogTitle,
   DialogFooter,
 } from "@/components/ui/dialog";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import { updateVideo } from "../../services/video.services";
 import toast from "react-hot-toast";
 function EditVideoDialog({ open, onOpenChange, video, onVideoUpdated }) {
+  const [isSaving, setIsSaving] = useState(false);
   const {
     register,
     handleSubmit,
@@ -26,6 +27,7 @@ function EditVideoDialog({ open, onOpenChange, video, onVideoUpdated }) {
     }
   }, [video, reset]);
   const onSubmit = async (data) => {
+    setIsSaving(true);
     try {
       const formData = new FormData();
 
@@ -44,13 +46,15 @@ function EditVideoDialog({ open, onOpenChange, video, onVideoUpdated }) {
       console.error(error);
 
       toast.error(error.response?.data?.message || "Failed to update video");
+    } finally {
+      setIsSaving(false);
     }
   };
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent>
+      <DialogContent className="rounded-2xl border border-slate-800 bg-slate-900">
         <DialogHeader>
-          <DialogTitle>Edit Video</DialogTitle>
+          <DialogTitle className="text-2xl">Edit Video</DialogTitle>
         </DialogHeader>
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
@@ -102,17 +106,11 @@ function EditVideoDialog({ open, onOpenChange, video, onVideoUpdated }) {
               Cancel
             </Button>
 
-            <Button type="submit">Save Changes</Button>
+            <Button type="submit" disabled={isSaving}>
+              {isSaving ? "Saving..." : "Save Changes"}
+            </Button>
           </DialogFooter>
         </form>
-
-        <DialogFooter>
-          <Button variant="outline" onClick={() => onOpenChange(false)}>
-            Cancel
-          </Button>
-
-          <Button>Save</Button>
-        </DialogFooter>
       </DialogContent>
     </Dialog>
   );

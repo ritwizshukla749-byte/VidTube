@@ -6,6 +6,7 @@ import Watch from "../pages/Watch";
 import Dashboard from "../pages/Dashboard";
 import Upload from "../pages/Upload";
 import NotFound from "../pages/NotFound";
+import ErrorPage from "../pages/ErrorPage";
 import MainLayout from "../layouts/MainLayout";
 import Channel from "../pages/Channel";
 import History from "../pages/History";
@@ -19,6 +20,7 @@ import PlaylistDetails from "../pages/PlaylistDetails";
 const router = createBrowserRouter([
   {
     element: <MainLayout />,
+    errorElement: <ErrorPage />,
     children: [
       {
         path: "/",
@@ -61,10 +63,12 @@ const router = createBrowserRouter([
   {
     path: "/login",
     element: <Login />,
+    errorElement: <ErrorPage />,
   },
   {
     path: "/register",
     element: <Register />,
+    errorElement: <ErrorPage />,
   },
   {
     path: "*",

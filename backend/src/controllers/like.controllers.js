@@ -105,16 +105,26 @@ const toggleTweetLike = asyncHandler(async (req, res) => {
 });
 
 const getLikedVideos = asyncHandler(async (req, res) => {
-  //TODO: get all liked videos
   const likedVideos = await Like.find({
     likedBy: req.user._id,
-    video: { $ne: null , $exists: true},
-  }).populate("video");
+  }).populate({
+    path: "video",
+    populate: {
+      path: "owner",
+      select: "fullName username avatar",
+    },
+  });
+
+  const validLikedVideos = likedVideos.filter((like) => like.video !== null);
 
   return res
     .status(200)
     .json(
-      new ApiResponse(200, "Liked videos fetched successfully", likedVideos)
+      new ApiResponse(
+        200,
+        "Liked videos fetched successfully",
+        validLikedVideos
+      )
     );
 });
 

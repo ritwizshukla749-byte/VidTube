@@ -5,6 +5,7 @@ import toast from "react-hot-toast";
 import { useDispatch } from "react-redux";
 import { loginSuccess } from "../store/authSlice.js";
 import { useNavigate } from "react-router-dom";
+import { Helmet } from "react-helmet-async";
 
 function Login() {
   const {
@@ -23,7 +24,7 @@ function Login() {
       const response = await loginUser(data);
 
       dispatch(loginSuccess(response.data.user));
-      toast.success(response.message);
+      toast.success("Logged in successfully");
       navigate("/");
     } catch (error) {
       toast.error(error.response?.data?.message || "Something went wrong");
@@ -34,7 +35,10 @@ function Login() {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-slate-950">
-      <div className="w-full max-w-md bg-slate-900 rounded-xl p-8 shadow-lg">
+      <Helmet>
+        <title>Login | VidTube</title>
+      </Helmet>
+      <div className="w-full max-w-md bg-slate-900 rounded-3xl p-8 shadow-lg">
         <h1 className="text-3xl text-white font-bold mb-6 text-center">
           Login
         </h1>
@@ -77,7 +81,7 @@ function Login() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full rounded-lg bg-green-500 py-3 text-black font-semibold hover:bg-green-400 disabled:cursor-not-allowed disabled:opacity-50"
+            className="w-full rounded-full bg-red-600 py-3 text-white font-semibold hover:bg-red-500 disabled:cursor-not-allowed disabled:opacity-50"
           >
             {loading ? "Logging in..." : "Login"}
           </button>

@@ -1,3 +1,5 @@
+import { Card } from "../ui/card.jsx";
+
 function VideoMeta({ video }) {
   return (
     <div className="mt-5">
@@ -13,11 +15,17 @@ function VideoMeta({ video }) {
         })}
       </div>
 
-      <div className="mt-4 rounded-xl bg-slate-900 p-4">
-        <p className="text-slate-300 whitespace-pre-wrap">
-          {video.description}
-        </p>
-      </div>
+      <Card className="mt-4 rounded-3xl border border-slate-800 bg-slate-900/70 p-6">
+        <div className="space-y-4">
+          <h3 className="mb-4 text-lg font-semibold text-white">Description</h3>
+
+          <p className="leading-7 text-slate-300">{video.description}</p>
+
+          <button className="text-sm font-medium text-slate-400 hover:text-white">
+            Show more ▼
+          </button>
+        </div>
+      </Card>
     </div>
   );
 }

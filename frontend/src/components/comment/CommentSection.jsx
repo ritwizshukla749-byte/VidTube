@@ -8,6 +8,7 @@ import {
 import CommentForm from "./CommentForm.jsx";
 function CommentSection({ videoId }) {
   const [comments, setComments] = useState([]);
+  const [isCommenting, setIsCommenting] = useState(false);
 
   
   const fetchComments = async () => {
@@ -24,12 +25,14 @@ useEffect(() => {
 }, [videoId]);
 
   const handleAddComment = async (content) => {
+    setIsCommenting(true);
     try {
       await addComment(videoId, content);
       await fetchComments();
-     
     } catch (err) {
       console.error(err);
+    } finally {
+      setIsCommenting(false);
     }
   };
 const handleDeleteComment = async (commentId) => {
@@ -43,7 +46,7 @@ const handleDeleteComment = async (commentId) => {
   return (
     <div className="mt-8">
       <h2 className="mb-5 text-2xl font-bold">Comments ({comments.length})</h2>
-      <CommentForm onSubmit={handleAddComment} />
+      <CommentForm onSubmit={handleAddComment} loading={isCommenting} />
 
       {comments.map((comment) => (
         <CommentCard key={comment._id} comment={comment} onDelete={handleDeleteComment} onRefresh={fetchComments} />

@@ -128,3 +128,28 @@
     @apply font-sans;
     }
 }
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: #020617;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #020617;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #334155;
+  border-radius: 999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #475569;
+}

@@ -1,4 +1,4 @@
-import { ThumbsUp, Share2, Bookmark } from "lucide-react";
+import { ThumbsUp, Share2, Bookmark, MoreVertical } from "lucide-react";
 import { Button } from "../ui/button";
 import {
   toggleVideoLike,
@@ -31,27 +31,58 @@ function VideoActions({ videoId }) {
     }
   };
   return (
-    <div className="mt-5 flex flex-wrap gap-3">
-      <Button variant={liked ? "default" : "secondary"} onClick={handleLike}>
-        <ThumbsUp className="mr-2 h-4 w-4" />
-        {liked ? "Liked" : "Like"}
-      </Button>
+    <>
+      <div className="mt-6 flex items-center justify-between">
+        <div className="flex flex-wrap items-center gap-3">
+          {/* LIKE */}
+          <Button
+            onClick={handleLike}
+            className={`h-11 rounded-full border px-5 transition-all duration-300 ${
+              liked
+                ? "border-red-500 bg-red-500/10 text-white hover:bg-red-500/20"
+                : "border-slate-700 bg-slate-900 text-white hover:bg-slate-800 hover:border-slate-500"
+            }`}
+          >
+            <ThumbsUp className="mr-2 h-4 w-4" />
+            <span>{liked ? "12" : "Like"}</span>
+          </Button>
 
-      <Button variant="secondary">
-        <Share2 className="mr-2 h-4 w-4" />
-        Share
-      </Button>
+          {/* SHARE */}
+          <Button
+            variant="ghost"
+            className="h-11 rounded-full border border-slate-700 bg-slate-900 px-5 text-white hover:bg-slate-800 hover:border-slate-500 transition-all duration-300"
+          >
+            <Share2 className="mr-2 h-4 w-4" />
+            Share
+          </Button>
 
-      <Button variant="secondary" onClick={() => setPlaylistDialogOpen(true)}>
-        <Bookmark className="mr-2 h-4 w-4" />
-        Save
-      </Button>
-      <AddToPlaylistDialog
-        open={playlistDialogOpen}
-        onOpenChange={setPlaylistDialogOpen}
-        videoId={videoId}
-      />
-    </div>
+          {/* SAVE */}
+          <Button
+            variant="ghost"
+            onClick={() => setPlaylistDialogOpen(true)}
+            className="h-11 rounded-full border border-slate-700 bg-slate-900 px-5 text-white hover:bg-slate-800 hover:border-slate-500 transition-all duration-300"
+          >
+            <Bookmark className="mr-2 h-4 w-4" />
+            Save to playlist
+          </Button>
+        </div>
+
+        {/* MORE */}
+        <Button
+          variant="ghost"
+          size="icon"
+          className="h-11 w-11 rounded-full border border-slate-700 bg-slate-900 hover:bg-slate-800 hover:border-slate-500 transition-all duration-300"
+        >
+          <MoreVertical className="h-5 w-5" />
+        </Button>
+
+        <AddToPlaylistDialog
+          open={playlistDialogOpen}
+          onOpenChange={setPlaylistDialogOpen}
+          videoId={videoId}
+        />
+      </div>
+    </>
   );
 }
 

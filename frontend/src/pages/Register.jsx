@@ -3,6 +3,7 @@ import { useState } from "react";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import { registerUser } from "../services/auth.services";
+import { Helmet } from "react-helmet-async";
 function Register() {
   const {
     register,
@@ -32,7 +33,7 @@ function Register() {
 
       const response = await registerUser(formData);
 
-      toast.success(response.message);
+      toast.success("Account created successfully");
 
       navigate("/login");
     } catch (error) {
@@ -46,7 +47,10 @@ function Register() {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-slate-950">
-      <div className="w-full max-w-md bg-slate-900 rounded-xl p-8 shadow-lg">
+      <Helmet>
+        <title>Register | VidTube</title>
+      </Helmet>
+      <div className="w-full max-w-md bg-slate-900 rounded-3xl p-8 shadow-lg">
         <h1 className="text-3xl text-white font-bold mb-6 text-center">
           Register
         </h1>
@@ -162,7 +166,7 @@ function Register() {
           <button
             type="submit"
             disabled={isRegistering}
-            className="w-full rounded-lg bg-green-500 py-3 font-semibold text-black disabled:opacity-50"
+            className="w-full rounded-full bg-red-600 py-3 font-semibold text-white hover:bg-red-500 disabled:opacity-50"
           >
             {isRegistering ? "Creating account..." : "Register"}
           </button>

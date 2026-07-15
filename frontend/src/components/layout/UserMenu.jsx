@@ -42,7 +42,13 @@ function UserMenu() {
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Avatar className="cursor-pointer">
-          <AvatarImage src={user.avatar} />
+          <AvatarImage
+            src={user.avatar}
+            onError={(e) => {
+              e.currentTarget.src =
+                "https://placehold.co/100x100/1e293b/ffffff?text=User";
+            }}
+          />
           <AvatarFallback>{user.fullName[0]}</AvatarFallback>
         </Avatar>
       </DropdownMenuTrigger>
@@ -69,7 +75,7 @@ function UserMenu() {
         <DropdownMenuItem onClick={() => navigate("/playlists")}>
           Playlists
         </DropdownMenuItem>
-        
+
         <DropdownMenuItem onClick={() => navigate("/liked")}>
           <Heart className="mr-2 h-4 w-4" />
           Liked Videos

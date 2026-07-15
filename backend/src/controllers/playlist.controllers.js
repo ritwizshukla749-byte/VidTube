@@ -1,4 +1,4 @@
-import { isValidObjectId } from "mongoose";
+import mongoose, { isValidObjectId } from "mongoose";
 import { Playlist } from "../models/playlist.models.js";
 import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
@@ -31,12 +31,43 @@ const createPlaylist = asyncHandler(async (req, res) => {
 
 const getUserPlaylists = asyncHandler(async (req, res) => {
   const { userId } = req.params;
-  //TODO: get user playlists
   if (!isValidObjectId(userId)) {
     throw new ApiError(400, "Invalid user ID");
   }
 
-  const playlists = await Playlist.find({ owner: userId });
+  const playlists = await Playlist.aggregate([
+    { $match: { owner: new mongoose.Types.ObjectId(userId) } },
+    {
+      $lookup: {
+        from: "videos",
+        localField: "videos",
+        foreignField: "_id",
+        as: "populatedVideos",
+      },
+    },
+    {
+      $addFields: {
+        videoCount: { $size: "$populatedVideos" },
+        thumbnail: {
+          $let: {
+            vars: { first: { $arrayElemAt: ["$populatedVideos", 0] } },
+            in: "$$first.thumbnail",
+          },
+        },
+      },
+    },
+    {
+      $project: {
+        name: 1,
+        description: 1,
+        videoCount: 1,
+        thumbnail: 1,
+        createdAt: 1,
+      },
+    },
+    { $sort: { createdAt: -1 } },
+  ]);
+
   return res
     .status(200)
     .json(

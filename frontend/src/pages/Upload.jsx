@@ -3,11 +3,13 @@ import { useForm } from "react-hook-form";
 import { publishVideo } from "../services/video.services";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
+import { Helmet } from "react-helmet-async";
 
 function Upload() {
   const {
     register,
     handleSubmit,
+    watch,
     formState: { errors },
   } = useForm();
   const navigate = useNavigate();
@@ -29,7 +31,7 @@ function Upload() {
 
       const response = await publishVideo(formData);
 
-      toast.success(response.message);
+      toast.success("Video uploaded successfully");
 
       navigate(`/watch/${response.data._id}`);
     } catch (error) {
@@ -42,29 +44,43 @@ function Upload() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-950 flex justify-center py-10">
-      <div className="w-full max-w-2xl rounded-xl bg-slate-900 p-8">
-        <h1 className="mb-8 text-center text-3xl font-bold text-white">
-          Upload Video
-        </h1>
+    <div className="mx-auto max-w-7xl px-10 py-10">
+      <Helmet>
+        <title>Upload | VidTube</title>
+      </Helmet>
 
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
+      {/* Header */}
+      <div className="mb-8 rounded-3xl border border-slate-800 bg-slate-900/70 p-8">
+        <h1 className="text-5xl font-extrabold text-white">Upload Video</h1>
+      </div>
+
+      <form onSubmit={handleSubmit(onSubmit)}>
+        {/* ① Video Details */}
+        <div className="mb-8 rounded-3xl border border-slate-800 bg-slate-900/70 p-8">
+          <h2 className="mb-6 text-xl font-bold text-white">
+            ① Video Details
+          </h2>
+
           {/* Title */}
+          <div className="mb-6">
+            <div className="flex items-center justify-between mb-2">
+              <label className="text-sm font-medium text-slate-300">
+                Title
+              </label>
+              <span className="text-sm text-slate-500">
+                {watch("title")?.length || 0}/100
+              </span>
+            </div>
 
-          <div>
             <input
               type="text"
               placeholder="Video Title"
-              className="w-full rounded-lg border border-slate-700 bg-slate-800 px-4 py-3 text-white"
+              maxLength={100}
+              className="w-full rounded-xl border border-slate-700 bg-slate-950/40 px-5 py-4 text-white placeholder:text-slate-500 focus:border-red-500 focus:outline-none"
               {...register("title", {
                 required: "Title is required",
               })}
             />
-            {errors.video && (
-              <p className="mt-1 text-sm text-red-500">
-                {errors.video.message}
-              </p>
-            )}
 
             {errors.title && (
               <p className="mt-1 text-sm text-red-500">
@@ -74,12 +90,21 @@ function Upload() {
           </div>
 
           {/* Description */}
-
           <div>
+            <div className="flex items-center justify-between mb-2">
+              <label className="text-sm font-medium text-slate-300">
+                Description
+              </label>
+              <span className="text-sm text-slate-500">
+                {watch("description")?.length || 0}/5000
+              </span>
+            </div>
+
             <textarea
-              rows={5}
+              rows={6}
+              maxLength={5000}
               placeholder="Description"
-              className="w-full rounded-lg border border-slate-700 bg-slate-800 px-4 py-3 text-white"
+              className="w-full rounded-xl border border-slate-700 bg-slate-950/40 px-5 py-4 text-white placeholder:text-slate-500 focus:border-red-500 focus:outline-none"
               {...register("description", {
                 required: "Description is required",
               })}
@@ -91,86 +116,143 @@ function Upload() {
               </p>
             )}
           </div>
+        </div>
 
-          {/* Video */}
+        {/* ② Video File */}
+        <div className="mb-8 rounded-3xl border border-slate-800 bg-slate-900/70 p-8">
+          <h2 className="mb-6 text-xl font-bold text-white">② Video File</h2>
 
-          <div className="rounded-xl border-2 border-dashed border-slate-700 p-6">
-            <label className="mb-4 block text-lg font-semibold text-white">
-               Upload Video
-            </label>
+          <input
+            type="file"
+            accept="video/*"
+            className="hidden"
+            id="video-upload"
+            {...register("video", {
+              required: "Video is required",
+              onChange: (e) => {
+                setVideoName(e.target.files?.[0]?.name || "");
+              },
+            })}
+          />
 
-            <input
-              type="file"
-              accept="video/*"
-              className="w-full text-white"
-              {...register("video", {
-                required: "Video is required",
-                onChange: (e) => {
-                  setVideoName(e.target.files?.[0]?.name || "");
-                },
-              })}
-            />
-
-            <p className="mt-3 text-sm text-slate-400">
-              MP4, MOV, AVI supported
-            </p>
-
-            {videoName && (
-              <p className="mt-4 rounded-lg bg-green-900/30 p-3 text-green-400">
+          <label
+            htmlFor="video-upload"
+            className="block cursor-pointer rounded-2xl border-2 border-dashed border-slate-700 bg-slate-950/30 p-16 text-center transition-all hover:border-red-500 hover:bg-slate-900"
+          >
+            {videoName ? (
+              <p className="text-lg font-medium text-green-400">
                 ✅ {videoName}
               </p>
+            ) : (
+              <>
+                <p className="text-4xl">⬆</p>
+
+                <p className="mt-4 text-lg font-semibold text-white">
+                  Drag & drop your video here
+                </p>
+
+                <p className="mt-2 text-sm text-slate-400">
+                  or click to browse
+                </p>
+
+                <p className="mt-2 text-xs text-slate-500">
+                  MP4, MOV, AVI up to 2GB
+                </p>
+              </>
             )}
-          </div>
+          </label>
 
-          {/* Thumbnail */}
+          {errors.video && (
+            <p className="mt-2 text-sm text-red-500">
+              {errors.video.message}
+            </p>
+          )}
+        </div>
 
-          <div className="rounded-xl border-2 border-dashed border-slate-700 p-6">
-            <label className="mb-4 block text-lg font-semibold text-white">
-               Thumbnail
-            </label>
+        {/* ③ Thumbnail */}
+        <div className="mb-8 rounded-3xl border border-slate-800 bg-slate-900/70 p-8">
+          <h2 className="mb-6 text-xl font-bold text-white">
+            ③ Thumbnail
+          </h2>
 
-            <input
-              type="file"
-              accept="image/*"
-              className="w-full text-white"
-              {...register("thumbnail", {
-                required: "Thumbnail is required",
-                onChange: (e) => {
-                  setThumbnailName(e.target.files?.[0]?.name || "");
-                },
-              })}
-            />
+          <input
+            type="file"
+            accept="image/*"
+            className="hidden"
+            id="thumbnail-upload"
+            {...register("thumbnail", {
+              required: "Thumbnail is required",
+              onChange: (e) => {
+                setThumbnailName(e.target.files?.[0]?.name || "");
+              },
+            })}
+          />
 
-            <p className="mt-3 text-sm text-slate-400">JPG, PNG, WEBP</p>
-
-            {thumbnailName && (
-              <p className="mt-4 rounded-lg bg-green-900/30 p-3 text-green-400">
+          <label
+            htmlFor="thumbnail-upload"
+            className="block cursor-pointer rounded-2xl border-2 border-dashed border-slate-700 bg-slate-950/30 p-16 text-center transition-all hover:border-red-500 hover:bg-slate-900"
+          >
+            {thumbnailName ? (
+              <p className="text-lg font-medium text-green-400">
                 ✅ {thumbnailName}
               </p>
+            ) : (
+              <>
+                <p className="text-4xl">⬆</p>
+
+                <p className="mt-4 text-lg font-semibold text-white">
+                  Drag & drop your thumbnail here
+                </p>
+
+                <p className="mt-2 text-sm text-slate-400">
+                  or click to browse
+                </p>
+
+                <p className="mt-2 text-xs text-slate-500">
+                  JPG, PNG, WEBP up to 10MB
+                </p>
+              </>
             )}
-          </div>
+          </label>
 
-          {/* Published */}
+          {errors.thumbnail && (
+            <p className="mt-2 text-sm text-red-500">
+              {errors.thumbnail.message}
+            </p>
+          )}
+        </div>
 
-          <div className="flex items-center gap-3">
+        {/* ☑ Publish */}
+        <div className="mb-8 rounded-3xl border border-slate-800 bg-slate-900/70 p-8">
+          <label className="flex items-start gap-3 cursor-pointer">
             <input
               type="checkbox"
               defaultChecked
               {...register("isPublished")}
+              className="mt-1"
             />
 
-            <label className="text-white">Publish immediately</label>
-          </div>
+            <div>
+              <p className="font-medium text-white">
+                Publish immediately
+              </p>
 
-          <button
-            type="submit"
-            disabled={isUploading}
-            className="w-full rounded-lg bg-red-600 py-3 font-semibold text-white transition hover:bg-red-500 disabled:cursor-not-allowed disabled:opacity-50"
-          >
-            {isUploading ? "Uploading..." : "Upload"}
-          </button>
-        </form>
-      </div>
+              <p className="text-sm text-slate-400">
+                Make your video visible to everyone right away
+              </p>
+            </div>
+          </label>
+        </div>
+
+        {/* Upload Button */}
+        <button
+          type="submit"
+          disabled={isUploading}
+          className="h-16 w-full rounded-full bg-red-600 text-lg font-semibold text-white shadow-[0_0_40px_rgba(239,68,68,.25)] transition-all hover:bg-red-500 hover:scale-[1.01] disabled:cursor-not-allowed disabled:opacity-50"
+        >
+          {isUploading ? "Uploading..." : "↑ Upload Video"}
+        </button>
+      </form>
     </div>
   );
 }

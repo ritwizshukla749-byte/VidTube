@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 
-function CommentForm({ onSubmit }) {
+function CommentForm({ onSubmit, loading }) {
   const [content, setContent] = useState("");
 
   const handleSubmit = (e) => {
@@ -23,7 +23,9 @@ function CommentForm({ onSubmit }) {
         className="flex-1 rounded-lg border border-slate-700 bg-slate-900 px-4 py-2 text-white outline-none"
       />
 
-      <Button type="submit">Post</Button>
+      <Button type="submit" disabled={loading}>
+        {loading ? "Posting..." : "Post"}
+      </Button>
     </form>
   );
 }
