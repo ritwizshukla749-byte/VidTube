@@ -30,6 +30,7 @@ import { Button } from "@/components/ui/button";
 
 function Playlists() {
   const user = useSelector((state) => state.auth.user);
+  const { isAuthenticated } = useSelector((state) => state.auth);
   const navigate = useNavigate();
   const [playlists, setPlaylists] = useState([]);
   const [name, setName] = useState("");
@@ -53,6 +54,10 @@ function Playlists() {
   }, [user]);
 
   const handleCreate = async () => {
+    if (!isAuthenticated) {
+      toast.error("Please log in to create a playlist");
+      return;
+    }
     if (!name.trim() || !description.trim()) {
       return toast.error("Fill all fields");
     }
@@ -80,6 +85,10 @@ function Playlists() {
   };
 
   const handleDelete = async (playlistId) => {
+    if (!isAuthenticated) {
+      toast.error("Please log in to delete a playlist");
+      return;
+    }
     try {
       await deletePlaylist(playlistId);
 

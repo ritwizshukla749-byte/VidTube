@@ -17,7 +17,7 @@ import toast from "react-hot-toast";
 
 function Channel() {
   const { username } = useParams();
-  const currentUser = useSelector((state) => state.auth.user);
+  const { user: currentUser, isAuthenticated } = useSelector((state) => state.auth);
 
   const [channel, setChannel] = useState(null);
   const [videos, setVideos] = useState([]);
@@ -51,6 +51,10 @@ function Channel() {
 
   const handleSubscribe = async () => {
     if (!channel) return;
+    if (!isAuthenticated) {
+      toast.error("Please log in to subscribe");
+      return;
+    }
     try {
       setIsSubscribing(true);
       await toggleSubscription(channel._id);

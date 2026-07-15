@@ -1,13 +1,16 @@
-import { ThumbsUp, Share2, Bookmark, MoreVertical } from "lucide-react";
+import { ThumbsUp, Share2, Bookmark } from "lucide-react";
 import { Button } from "../ui/button";
 import {
   toggleVideoLike,
   getLikeStatus,
 } from "../../services/like.services.js";
 import { useState, useEffect } from "react";
+import { useSelector } from "react-redux";
+import toast from "react-hot-toast";
 import AddToPlaylistDialog from "../playlist/AddToPlaylistDialog";
 
 function VideoActions({ videoId }) {
+  const { isAuthenticated } = useSelector((state) => state.auth);
   const [liked, setLiked] = useState(false);
   const [playlistDialogOpen, setPlaylistDialogOpen] = useState(false);
   useEffect(() => {
@@ -23,6 +26,10 @@ function VideoActions({ videoId }) {
     fetchStatus();
   }, [videoId]);
   const handleLike = async () => {
+    if (!isAuthenticated) {
+      toast.error("Please log in to like a video");
+      return;
+    }
     try {
       await toggleVideoLike(videoId);
       setLiked((prev) => !prev);
@@ -59,22 +66,19 @@ function VideoActions({ videoId }) {
           {/* SAVE */}
           <Button
             variant="ghost"
-            onClick={() => setPlaylistDialogOpen(true)}
+            onClick={() => {
+              if (!isAuthenticated) {
+                toast.error("Please log in to save to playlist");
+                return;
+              }
+              setPlaylistDialogOpen(true);
+            }}
             className="h-11 rounded-full border border-slate-700 bg-slate-900 px-5 text-white hover:bg-slate-800 hover:border-slate-500 transition-all duration-300"
           >
             <Bookmark className="mr-2 h-4 w-4" />
             Save to playlist
           </Button>
         </div>
-
-        {/* MORE */}
-        <Button
-          variant="ghost"
-          size="icon"
-          className="h-11 w-11 rounded-full border border-slate-700 bg-slate-900 hover:bg-slate-800 hover:border-slate-500 transition-all duration-300"
-        >
-          <MoreVertical className="h-5 w-5" />
-        </Button>
 
         <AddToPlaylistDialog
           open={playlistDialogOpen}

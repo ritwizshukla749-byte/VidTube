@@ -12,7 +12,7 @@ import {
 } from "../../services/subscription.services.js";
 
 function ChannelInfo({ owner }) {
-  const user = useSelector((state) => state.auth.user);
+  const { user, isAuthenticated } = useSelector((state) => state.auth);
   const [subscriberCount, setSubscriberCount] = useState(0);
   const [isSubscribed, setIsSubscribed] = useState(false);
   const [isSubscribing, setIsSubscribing] = useState(false);
@@ -35,6 +35,10 @@ function ChannelInfo({ owner }) {
   }, [owner, user?._id]);
 
   const handleSubscription = async () => {
+    if (!isAuthenticated) {
+      toast.error("Please log in to subscribe");
+      return;
+    }
     try {
       setIsSubscribing(true);
       await toggleSubscription(owner._id);

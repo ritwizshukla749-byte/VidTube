@@ -1,4 +1,6 @@
 import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+import toast from "react-hot-toast";
 import CommentCard from "./CommentCard.jsx"
 import {
   getVideoComments,
@@ -7,6 +9,7 @@ import {
 } from "../../services/comment.services.js";
 import CommentForm from "./CommentForm.jsx";
 function CommentSection({ videoId }) {
+  const { isAuthenticated } = useSelector((state) => state.auth);
   const [comments, setComments] = useState([]);
   const [isCommenting, setIsCommenting] = useState(false);
 
@@ -25,6 +28,10 @@ useEffect(() => {
 }, [videoId]);
 
   const handleAddComment = async (content) => {
+    if (!isAuthenticated) {
+      toast.error("Please log in to comment");
+      return;
+    }
     setIsCommenting(true);
     try {
       await addComment(videoId, content);

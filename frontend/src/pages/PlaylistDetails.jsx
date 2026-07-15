@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import { useSelector } from "react-redux";
 import {
   getPlaylistById,
   removeVideoFromPlaylist,
@@ -23,6 +24,7 @@ import {
 
 function PlaylistDetails() {
   const { playlistId } = useParams();
+  const { isAuthenticated } = useSelector((state) => state.auth);
 
   const [playlist, setPlaylist] = useState(null);
   const [removeTarget, setRemoveTarget] = useState(null);
@@ -41,6 +43,10 @@ function PlaylistDetails() {
   }, [playlistId]);
 
   const handleRemove = async (videoId) => {
+    if (!isAuthenticated) {
+      toast.error("Please log in to modify playlists");
+      return;
+    }
     try {
       await removeVideoFromPlaylist(playlist._id, videoId);
 
