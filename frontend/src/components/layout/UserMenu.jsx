@@ -11,7 +11,7 @@ import {
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
-import { LogOut, LayoutDashboard, Heart, History } from "lucide-react";
+import { LogOut, LayoutDashboard, Heart, History, ListVideo } from "lucide-react";
 
 import { logout } from "@/store/authSlice";
 import { logoutUser } from "@/services/auth.services";
@@ -73,6 +73,7 @@ function UserMenu() {
         </DropdownMenuItem>
 
         <DropdownMenuItem onClick={() => navigate("/playlists")}>
+          <ListVideo className="mr-2 h-4 w-4" />
           Playlists
         </DropdownMenuItem>
 

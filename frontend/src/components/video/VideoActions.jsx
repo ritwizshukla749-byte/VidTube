@@ -12,12 +12,21 @@ import AddToPlaylistDialog from "../playlist/AddToPlaylistDialog";
 function VideoActions({ videoId }) {
   const { isAuthenticated } = useSelector((state) => state.auth);
   const [liked, setLiked] = useState(false);
+  const [likeCount, setLikeCount] = useState(0);
   const [playlistDialogOpen, setPlaylistDialogOpen] = useState(false);
+
+  const handleShare = () => {
+    navigator.clipboard.writeText(
+      `${window.location.origin}/watch/${videoId}`
+    );
+    toast.success("Link copied!");
+  };
   useEffect(() => {
     const fetchStatus = async () => {
       try {
         const response = await getLikeStatus(videoId);
         setLiked(response.liked);
+        setLikeCount(response.likeCount);
       } catch (err) {
         console.error(err);
       }
@@ -33,6 +42,7 @@ function VideoActions({ videoId }) {
     try {
       await toggleVideoLike(videoId);
       setLiked((prev) => !prev);
+      setLikeCount((prev) => (liked ? prev - 1 : prev + 1));
     } catch (err) {
       console.error(err);
     }
@@ -50,12 +60,16 @@ function VideoActions({ videoId }) {
                 : "border-slate-700 bg-slate-900 text-white hover:bg-slate-800 hover:border-slate-500"
             }`}
           >
-            <ThumbsUp className="mr-2 h-4 w-4" />
-            <span>{liked ? "12" : "Like"}</span>
+            <ThumbsUp
+              className="mr-2 h-4 w-4"
+              fill={liked ? "currentColor" : "none"}
+            />
+            <span>{likeCount > 0 ? likeCount.toLocaleString() : "Like"}</span>
           </Button>
 
           {/* SHARE */}
           <Button
+            onClick={handleShare}
             variant="ghost"
             className="h-11 rounded-full border border-slate-700 bg-slate-900 px-5 text-white hover:bg-slate-800 hover:border-slate-500 transition-all duration-300"
           >

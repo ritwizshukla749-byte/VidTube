@@ -18,11 +18,9 @@ function Navbar() {
         to="/"
         className="group flex items-center gap-3"
       >
-        <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-yellow-300 to-yellow-600 text-xl font-black text-black shadow-lg">
-          V
-        </div>
+        <img src="/logo.png" alt="VidTube" className="h-14 w-auto object-contain" />
 
-        <span className="text-3xl font-bold tracking-tight">
+        <span className="text-4xl font-bold tracking-tight">
           <span className="transition-colors duration-300 group-hover:text-red-500">
             Vid
           </span>

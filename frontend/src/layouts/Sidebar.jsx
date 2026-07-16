@@ -125,23 +125,6 @@ function Sidebar() {
         </div>
       </nav>
 
-      {/* Creator Tip */}
-      <div className="mt-auto rounded-2xl border border-slate-800 bg-slate-900/70 p-5">
-        <p className="text-sm font-semibold text-amber-400">✨ Creator Tip</p>
-
-        <p className="mt-1 text-base font-medium">Upload consistently</p>
-
-        <p className="mt-1 text-sm text-slate-500">
-          Consistency beats perfection.
-        </p>
-
-        <NavLink
-          to="/upload"
-          className="mt-4 block rounded-full bg-red-600 py-2.5 text-center text-sm font-semibold transition hover:bg-red-700"
-        >
-          Upload Video
-        </NavLink>
-      </div>
     </aside>
   );
 }

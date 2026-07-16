@@ -1,7 +1,37 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import { formatDistanceToNow } from "date-fns";
-import { MoreVertical } from "lucide-react";
+import { MoreVertical, Bookmark, Share2 } from "lucide-react";
+import { useSelector } from "react-redux";
+import toast from "react-hot-toast";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import AddToPlaylistDialog from "../playlist/AddToPlaylistDialog";
+
 function VideoCard({ video }) {
+  const { isAuthenticated } = useSelector((state) => state.auth);
+  const [playlistDialogOpen, setPlaylistDialogOpen] = useState(false);
+
+  const handleShare = (e) => {
+    e.preventDefault();
+    navigator.clipboard.writeText(
+      `${window.location.origin}/watch/${video._id}`
+    );
+    toast.success("Link copied!");
+  };
+
+  const handleSaveToPlaylist = (e) => {
+    e.preventDefault();
+    if (!isAuthenticated) {
+      toast.error("Please log in to save to playlist");
+      return;
+    }
+    setPlaylistDialogOpen(true);
+  };
   const formatDuration = (seconds) => {
     const mins = Math.floor(seconds / 60);
     const secs = Math.floor(seconds % 60);
@@ -68,11 +98,34 @@ function VideoCard({ video }) {
             </div>
           </div>
 
-          <button className="self-start rounded-full p-2 text-slate-500 transition hover:bg-slate-800 hover:text-white">
-            <MoreVertical className="h-4 w-4" />
-          </button>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <button
+                onClick={(e) => e.preventDefault()}
+                className="self-start rounded-full p-2 text-slate-500 transition hover:bg-slate-800 hover:text-white"
+              >
+                <MoreVertical className="h-4 w-4" />
+              </button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuItem onClick={handleSaveToPlaylist}>
+                <Bookmark className="mr-2 h-4 w-4" />
+                Save to Playlist
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={handleShare}>
+                <Share2 className="mr-2 h-4 w-4" />
+                Share
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       </div>
+
+      <AddToPlaylistDialog
+        open={playlistDialogOpen}
+        onOpenChange={setPlaylistDialogOpen}
+        videoId={video._id}
+      />
     </Link>
   );
 }

@@ -131,14 +131,15 @@ const getLikedVideos = asyncHandler(async (req, res) => {
 const getLikeStatus = asyncHandler(async (req, res) => {
   const { videoId } = req.params;
 
-  const liked = await Like.exists({
-    likedBy: req.user._id,
-    video: videoId,
-  });
+  const [existingLike, likeCount] = await Promise.all([
+    Like.exists({ likedBy: req.user._id, video: videoId }),
+    Like.countDocuments({ video: videoId }),
+  ]);
 
   return res.status(200).json(
     new ApiResponse(200, "Like status fetched successfully", {
-      liked: !!liked,
+      liked: !!existingLike,
+      likeCount,
     })
   );
 });
