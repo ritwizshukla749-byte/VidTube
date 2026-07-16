@@ -13,6 +13,7 @@ import History from "../pages/History";
 import Liked from "../pages/Liked";
 import Playlists from "../pages/Playlists";
 import PlaylistDetails from "../pages/PlaylistDetails";
+import ProtectedRoute from "../components/common/ProtectedRoute";
 
 
 
@@ -27,36 +28,41 @@ const router = createBrowserRouter([
         element: <Home />,
       },
       {
-        path: "/playlists",
-        element: <Playlists />,
-      },
-      {
-        path: "/playlists/:playlistId",
-        element: <PlaylistDetails />,
-      },
-      {
-        path: "/liked",
-        element: <Liked />,
-      },
-      {
         path: "/watch/:videoId",
         element: <Watch />,
-      },
-      {
-        path: "/history",
-        element: <History />,
       },
       {
         path: "/channel/:username",
         element: <Channel />,
       },
       {
-        path: "/dashboard",
-        element: <Dashboard />,
+        path: "/playlists/:playlistId",
+        element: <PlaylistDetails />,
       },
       {
-        path: "/upload",
-        element: <Upload />,
+        element: <ProtectedRoute />,
+        children: [
+          {
+            path: "/playlists",
+            element: <Playlists />,
+          },
+          {
+            path: "/liked",
+            element: <Liked />,
+          },
+          {
+            path: "/history",
+            element: <History />,
+          },
+          {
+            path: "/dashboard",
+            element: <Dashboard />,
+          },
+          {
+            path: "/upload",
+            element: <Upload />,
+          },
+        ],
       },
     ],
   },
